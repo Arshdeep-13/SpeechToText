@@ -6,7 +6,7 @@ import SpeechRecognition, {
 import useClipboard from "react-use-clipboard";
 import "../assets/ButtonHover.css"
 
-if (window.location.href === "http://localhost:5173/speechtotext") {
+if (window.location.href === "https://ar-speechtotext.netlify.app/speechtotext") {
   document.body.style.backgroundColor = "#F0FFFF";
   console.log("hi")
 }
