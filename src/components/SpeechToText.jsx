@@ -1,29 +1,31 @@
-import { useState } from "react";
+import "regenerator-runtime/runtime"
+import React, { useState } from "react";
 import "../assets/SpeechToText.css";
-import SpeechRecognition, {
-  useSpeechRecognition,
-} from "react-speech-recognition";
+import SpeechRecognition, {useSpeechRecognition} from "react-speech-recognition";
 import useClipboard from "react-use-clipboard";
 import "../assets/ButtonHover.css"
 
-if (window.location.href === "https://ar-speechtotext.netlify.app/speechtotext") {
-  document.body.style.backgroundColor = "#F0FFFF";
-  console.log("hi")
-}
 
 function SpeechToText() {
   try {
-    const { transcript, browserSupportsSpeechRecognition, listening } =
-      useSpeechRecognition();
+    if (window.location.href === "http://ar-speechtotext/speechtotext") {
+      document.body.style.backgroundColor = "#F0FFFF";
+      console.log("bg change")
+    }
+    let start = () => SpeechRecognition.startListening({ continuous: true, language: 'en-IN' }).then( () => {
+      console.log("done")
+    }).catch( err => {
+      console.log("not")
+    });
+    const { transcript, browserSupportsSpeechRecognition, listening } = useSpeechRecognition();
+    
+    const [texttocopy, settexttocopy] = useState(" ");
+    const [isCopied, setCopied] = useClipboard(texttocopy);
+    
+    if (!browserSupportsSpeechRecognition) {
+      alert("doesn't supported")
+    }
 
-  const [texttocopy, settexttocopy] = useState(" ");
-  const [isCopied, setCopied] = useClipboard(texttocopy);
-
-  if (!browserSupportsSpeechRecognition) {
-    return null;
-  }
-
-  const start = () => SpeechRecognition.startListening({ continuous: true });
 
   return (
     <div className="main-container my-2">
@@ -42,7 +44,7 @@ function SpeechToText() {
             Was it copied? {isCopied ? "Yes! 👍" : "Nope! 👎"}
           </button>
           <button className="button-86" onClick={start}>Start Listening</button>
-          <button className="button-86" onClick={SpeechRecognition.stopListening}>
+          <button className="button-86" onClick={SpeechRecognition.stopListening()}>
             Stop Listening
           </button>
         </div>
